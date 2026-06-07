@@ -1,0 +1,27 @@
+# ---------- .NET ----------
+bin/
+obj/
+out/
+*.user
+*.suo
+.vs/
+
+# SQLite database files (created at runtime)
+*.db
+*.db-shm
+*.db-wal
+
+# ---------- Node / frontend ----------
+node_modules/
+dist/
+dist-ssr/
+*.local
+.env.local
+.env.*.local
+
+# ---------- Editors / OS ----------
+.idea/
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+*.log
