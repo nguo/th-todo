@@ -1,0 +1,260 @@
+/* The base stylesheet (index.css) styles #root as a fixed-width centered demo page; the app
+   wants a fluid, left-aligned layout instead. */
+#root {
+  width: 100%;
+  max-width: 100%;
+  border-inline: none;
+  text-align: left;
+}
+
+/* ---- Layout primitives ---- */
+
+.screen-center {
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: var(--shadow);
+  box-sizing: border-box;
+}
+
+/* ---- Form controls ---- */
+
+input[type='text'],
+input[type='password'],
+input:not([type]) {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-h);
+  font: inherit;
+  font-size: 16px; /* >=16px avoids mobile zoom-on-focus */
+  box-sizing: border-box;
+}
+
+input:focus-visible {
+  outline: 2px solid var(--accent-border);
+  outline-offset: 1px;
+  border-color: var(--accent);
+}
+
+button {
+  font: inherit;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button[type='submit'],
+.auth-form button {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+button[type='submit']:not(:disabled):hover {
+  filter: brightness(1.08);
+}
+
+.error {
+  color: #e5484d;
+  font-size: 14px;
+  margin: 0;
+  text-align: left;
+}
+
+.muted {
+  color: var(--text);
+}
+
+/* ---- Auth pages ---- */
+
+.auth-form {
+  width: 360px;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.auth-form h1 {
+  margin: 0;
+  font-size: 32px;
+}
+
+.auth-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.auth-footer {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text);
+  text-align: center;
+}
+
+a {
+  color: var(--accent);
+}
+
+/* ---- Todo app ---- */
+
+.app {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 24px 16px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: var(--accent);
+  padding: 0;
+  font-size: 14px;
+}
+
+.add-todo-row {
+  display: flex;
+  gap: 8px;
+}
+
+.add-todo-row input {
+  flex: 1;
+}
+
+.add-todo .error {
+  margin-top: 8px;
+}
+
+.todo-list {
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 4px;
+  border-bottom: 1px solid var(--border);
+}
+
+.todo-item:last-child {
+  border-bottom: none;
+}
+
+.todo-check {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  cursor: pointer;
+  accent-color: var(--accent);
+}
+
+.todo-title {
+  flex: 1;
+  text-align: left;
+  cursor: text;
+  word-break: break-word;
+  color: var(--text-h);
+}
+
+.todo-item.completed .todo-title {
+  text-decoration: line-through;
+  color: var(--text);
+  opacity: 0.6;
+}
+
+.todo-edit {
+  flex: 1;
+}
+
+.todo-actions {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.icon-button {
+  background: none;
+  border: 1px solid transparent;
+  color: var(--text);
+  font-size: 13px;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.icon-button:hover {
+  background: var(--accent-bg);
+}
+
+.icon-button.danger:hover {
+  color: #e5484d;
+}
+
+.empty {
+  padding: 24px 0;
+  text-align: center;
+}
+
+.count {
+  text-align: right;
+  font-size: 13px;
+  margin: 12px 0 0;
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: 18px;
+  }
+  .app {
+    padding: 16px 12px;
+  }
+}
