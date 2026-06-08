@@ -14,9 +14,9 @@ public record TodoItemDto(
     DateTime UpdatedAt);
 
 public record CreateTodoRequest(
-    [property: Required, StringLength(500, MinimumLength = 1)] string Title);
+    [Required, StringLength(500, MinimumLength = 1)] string Title);
 
 // Both fields optional: send Title to rename, IsCompleted to (un)complete, or both.
 public record UpdateTodoRequest(
-    [property: StringLength(500, MinimumLength = 1)] string? Title,
+    [StringLength(500, MinimumLength = 1)] string? Title,
     bool? IsCompleted);
