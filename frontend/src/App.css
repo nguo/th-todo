@@ -270,10 +270,33 @@ a {
   text-align: center;
 }
 
-.count {
-  text-align: right;
+.progress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.progress-pct {
   font-size: 13px;
-  margin: 12px 0 0;
+  color: var(--text);
+  min-width: 4ch; /* fixed so the bar doesn't shift as the number grows to "100%" */
+  text-align: right;
+}
+
+.progress-track {
+  flex: 1;
+  height: 8px;
+  background: var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: inherit;
+  transition: width 0.2s ease;
 }
 
 @media (max-width: 480px) {

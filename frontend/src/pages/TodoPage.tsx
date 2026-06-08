@@ -77,6 +77,9 @@ export function TodoPage() {
   )
 
   const remaining = items.filter((i) => !i.isCompleted).length
+  const completed = items.length - remaining
+  // Guarded by the items.length > 0 branch below, so no divide-by-zero.
+  const percent = items.length === 0 ? 0 : Math.floor((completed / items.length) * 100)
 
   return (
     <div className="app">
@@ -91,7 +94,6 @@ export function TodoPage() {
       </header>
 
       <main>
-        <AddTodo onAdd={addTodo} disabled={!listId} />
 
         {loading && <p className="muted">Loading…</p>}
         {error && (
@@ -105,6 +107,19 @@ export function TodoPage() {
             <p className="muted empty">Nothing here yet. Add your first task above.</p>
           ) : (
             <>
+              <div
+                className="progress"
+                role="progressbar"
+                aria-valuenow={percent}
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-label="Completion progress"
+              >
+                <span className="progress-pct">{percent}%</span>
+                <div className="progress-track">
+                  <div className="progress-fill" style={{ width: `${percent}%` }} />
+                </div>
+              </div>
               <ul className="todo-list">
                 {items.map((item) => (
                   <TodoItemRow
@@ -116,11 +131,10 @@ export function TodoPage() {
                   />
                 ))}
               </ul>
-              <p className="muted count">
-                {items.length - remaining}/{items.length} completed
-              </p>
             </>
           ))}
+
+        <AddTodo onAdd={addTodo} disabled={!listId} />
       </main>
     </div>
   )
