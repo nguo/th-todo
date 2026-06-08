@@ -86,3 +86,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+// Exposes the implicit Program type to the test project for WebApplicationFactory<Program>.
+// No runtime effect.
+public partial class Program { }

@@ -41,6 +41,7 @@ export function AuthForm({ title, submitLabel, onSubmit, passwordAutoComplete, f
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             autoComplete="username"
+            data-testid="auth-username"
             autoFocus
             required
           />
@@ -53,6 +54,7 @@ export function AuthForm({ title, submitLabel, onSubmit, passwordAutoComplete, f
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             autoComplete={passwordAutoComplete}
+            data-testid="auth-password"
             required
           />
         </label>
@@ -63,7 +65,7 @@ export function AuthForm({ title, submitLabel, onSubmit, passwordAutoComplete, f
           </p>
         )}
 
-        <button type="submit" disabled={busy}>
+        <button type="submit" data-testid="auth-submit" disabled={busy}>
           {busy ? 'Please wait…' : submitLabel}
         </button>
 

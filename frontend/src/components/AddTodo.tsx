@@ -36,9 +36,10 @@ export function AddTodo({ onAdd, disabled }: AddTodoProps) {
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Add a task…"
           aria-label="New task"
+          data-testid="add-todo-input"
           disabled={disabled || busy}
         />
-        <button type="submit" disabled={disabled || busy || !title.trim()}>
+        <button type="submit" data-testid="add-todo-submit" disabled={disabled || busy || !title.trim()}>
           Add
         </button>
       </div>
