@@ -90,7 +90,7 @@ export function TodoPage() {
         </div>
       </header>
 
-      <main className="card">
+      <main>
         <AddTodo onAdd={addTodo} disabled={!listId} />
 
         {loading && <p className="muted">Loading…</p>}
@@ -117,7 +117,7 @@ export function TodoPage() {
                 ))}
               </ul>
               <p className="muted count">
-                {remaining} of {items.length} remaining
+                {items.length - remaining}/{items.length} completed
               </p>
             </>
           ))}

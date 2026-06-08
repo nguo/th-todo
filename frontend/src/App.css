@@ -31,7 +31,8 @@
 
 input[type='text'],
 input[type='password'],
-input:not([type]) {
+input:not([type]),
+textarea {
   width: 100%;
   padding: 10px 12px;
   border: 1px solid var(--border);
@@ -43,7 +44,8 @@ input:not([type]) {
   box-sizing: border-box;
 }
 
-input:focus-visible {
+input:focus-visible,
+textarea:focus-visible {
   outline: 2px solid var(--accent-border);
   outline-offset: 1px;
   border-color: var(--accent);
@@ -180,7 +182,7 @@ a {
 
 .todo-item {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
   padding: 10px 4px;
   border-bottom: 1px solid var(--border);
@@ -193,6 +195,7 @@ a {
 .todo-check {
   width: 18px;
   height: 18px;
+  margin-top: 4px; /* line the checkbox up with the first line of text / top of the input */
   flex-shrink: 0;
   cursor: pointer;
   accent-color: var(--accent);
@@ -204,6 +207,7 @@ a {
   cursor: text;
   word-break: break-word;
   color: var(--text-h);
+  min-width: 0;
 }
 
 .todo-item.completed .todo-title {
@@ -214,6 +218,28 @@ a {
 
 .todo-edit {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.todo-edit textarea {
+  field-sizing: content; /* auto-grow to fit content (Chromium; degrades to fixed elsewhere) */
+  resize: vertical;
+  line-height: 1.4;
+}
+
+.todo-edit-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.todo-edit-actions button[type='submit'] {
+  padding: 6px 14px;
+}
+
+.todo-edit-actions .icon-button {
+  padding: 6px 14px;
 }
 
 .todo-actions {
