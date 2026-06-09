@@ -1,6 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { AuthProvider } from './auth/AuthProvider'
 import { ProtectedRoute } from './auth/ProtectedRoute'
+import { AppLayout } from './layout/AppLayout'
 import { LoginPage } from './pages/LoginPage'
 import { RegisterPage } from './pages/RegisterPage'
 import { TodoPage } from './pages/TodoPage'
@@ -17,10 +18,12 @@ export default function App() {
             path="/"
             element={
               <ProtectedRoute>
-                <TodoPage />
+                <AppLayout />
               </ProtectedRoute>
             }
-          />
+          >
+            <Route index element={<TodoPage />} />
+          </Route>
           {/* Unknown paths fall back to the app root. */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

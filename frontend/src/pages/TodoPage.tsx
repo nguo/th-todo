@@ -1,11 +1,9 @@
 import { useCallback, useEffect, useState } from 'react'
 import { api, type TodoItem, type TodoList } from '../api/client'
-import { useAuth } from '../auth/auth-context'
 import { AddTodo } from '../components/AddTodo'
 import { TodoItemRow } from '../components/TodoItemRow'
 
 export function TodoPage() {
-  const { username, logout } = useAuth()
   // MVP: every user has one default list. We resolve its id once and scope all calls to it.
   const [listId, setListId] = useState<string | null>(null)
   const [items, setItems] = useState<TodoItem[]>([])
@@ -102,16 +100,6 @@ export function TodoPage() {
 
   return (
     <div className="app">
-      <header className="app-header">
-        <h1>My Tasks</h1>
-        <div className="user">
-          <span className="muted">{username}</span>
-          <button type="button" className="link-button" onClick={logout}>
-            Log out
-          </button>
-        </div>
-      </header>
-
       <main>
 
         {loading && <p className="muted">Loading…</p>}
