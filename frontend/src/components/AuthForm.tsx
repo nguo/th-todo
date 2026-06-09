@@ -2,15 +2,16 @@ import { useState, type SyntheticEvent, type ReactNode } from 'react'
 import { authError, type AuthError } from './authError'
 
 interface AuthFormProps {
-  submitLabel: string
+  submitLabel: string,
   // Resolves on success; rejects (usually ApiError) on failure so we show the message.
   onSubmit: (username: string, password: string) => Promise<void>
   passwordAutoComplete: 'current-password' | 'new-password'
-  footer: ReactNode
+  footer: ReactNode,
+  enforceLength?: boolean
 }
 
 // Shared username/password form for login and register.
-export function AuthForm({ submitLabel, onSubmit, passwordAutoComplete, footer }: AuthFormProps) {
+export function AuthForm({ submitLabel, onSubmit, passwordAutoComplete, footer, enforceLength = false }: AuthFormProps) {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<AuthError | null>(null)
@@ -34,8 +35,8 @@ export function AuthForm({ submitLabel, onSubmit, passwordAutoComplete, footer }
       <label>
         Username
         <input
-          minLength={3}
-          maxLength={30}
+          minLength={enforceLength ? 3 : undefined}
+          maxLength={enforceLength ? 30 : undefined}
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           autoComplete="username"
@@ -48,7 +49,7 @@ export function AuthForm({ submitLabel, onSubmit, passwordAutoComplete, footer }
       <label>
         Password
         <input
-          minLength={8}
+          minLength={enforceLength ? 8 : undefined}
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}

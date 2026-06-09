@@ -11,6 +11,7 @@ export function RegisterPage() {
       onSubmit={register}
       passwordAutoComplete="new-password"
       footer={<>Already have an account? <Link to="/login">Log in</Link></>}
+      enforceLength={true}
     />
   )
 }
