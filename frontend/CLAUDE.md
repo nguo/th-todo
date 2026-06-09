@@ -8,5 +8,6 @@
 - **No defensive leading semicolons** (`;(async () => {…})()`). Define a named function
   and call it: `const load = async () => {…}; load()`.
 
-# Environment files
-* Do not modify env files
+## Testing guidelines
+* Do not rely on copy text (displayed text that could change) for test validation.
+* Use MSW for network calls.
