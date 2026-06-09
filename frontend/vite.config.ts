@@ -9,6 +9,13 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
+    headers: {
+      'X-Content-Type-Options': 'nosniff',
+      'X-Frame-Options': 'DENY',
+      // ws: permits the Vite HMR WebSocket in dev; prod CSP (set at the reverse proxy) omits it
+      'Content-Security-Policy':
+        "default-src 'self'; connect-src 'self' ws:; frame-ancestors 'none'",
+    },
     proxy: {
       '/api': {
         target: 'http://localhost:5080',
