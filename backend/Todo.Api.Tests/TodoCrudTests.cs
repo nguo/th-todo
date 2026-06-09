@@ -123,4 +123,17 @@ public class TodoCrudTests(CustomWebApplicationFactory factory) : IClassFixture<
         var res = await client.PutAsJsonAsync($"/api/lists/{listId}/todos/{Guid.NewGuid()}", new { title = "z" });
         Assert.Equal(HttpStatusCode.NotFound, res.StatusCode);
     }
+
+    [Fact]
+    public async Task Create_allows_duplicate_titles()
+    {
+        // Titles aren't unique — the same text creates two distinct items (POST always creates).
+        var (client, listId) = await SetupAsync();
+        var first = await CreateAsync(client, listId, "buy milk");
+        var second = await CreateAsync(client, listId, "buy milk");
+
+        Assert.NotEqual(first.Id, second.Id);
+        var items = await client.GetFromJsonAsync<List<ItemResp>>($"/api/lists/{listId}/todos");
+        Assert.Equal(2, items!.Count(i => i.Title == "buy milk"));
+    }
 }
