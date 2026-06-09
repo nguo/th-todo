@@ -10,7 +10,6 @@ export function LoginPage() {
 
   return (
     <AuthForm
-      title="Log in"
       submitLabel="Log in"
       onSubmit={login}
       passwordAutoComplete="current-password"

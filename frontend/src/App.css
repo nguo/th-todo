@@ -12,6 +12,7 @@
 .screen-center {
   min-height: 100svh;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 16px;
@@ -64,6 +65,7 @@ button[type='submit'],
   border: none;
   border-radius: 8px;
   padding: 10px 16px;
+  font-weight: 500;
 }
 
 button:disabled {
@@ -87,6 +89,23 @@ button[type='submit']:not(:disabled):hover {
 }
 
 /* ---- Auth pages ---- */
+
+.guest-layout .wordmark {
+  margin-bottom: 15px;
+}
+
+.guest-layout .lead {
+  color: var(--accent);
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.auth-shell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
 
 .auth-form {
   width: 360px;
@@ -135,6 +154,11 @@ a {
   font-size: 28px;
 }
 
+.wordmark-hero {
+  font-size: 56px;
+  text-align: center;
+}
+
 /* ---- Navbar ---- */
 
 .navbar {
@@ -170,7 +194,7 @@ a {
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: var(--border);
+  background: var(--accent-border);
   flex-shrink: 0;
 }
 
@@ -193,6 +217,7 @@ a {
   text-align: left;
   padding: 8px 10px;
   border-radius: 6px;
+  font-weight: 500;
 }
 
 .user-menu .link-button:hover {
@@ -394,5 +419,8 @@ a {
   }
   .app {
     padding: 16px 12px;
+  }
+  .wordmark-hero {
+    font-size: 40px;
   }
 }

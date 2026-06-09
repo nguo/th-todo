@@ -10,7 +10,6 @@ export function RegisterPage() {
 
   return (
     <AuthForm
-      title="Sign up"
       submitLabel="Create account"
       onSubmit={register}
       passwordAutoComplete="new-password"

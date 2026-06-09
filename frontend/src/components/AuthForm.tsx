@@ -2,7 +2,6 @@ import { useState, type SyntheticEvent, type ReactNode } from 'react'
 import { ApiError } from '../api/client'
 
 interface AuthFormProps {
-  title: string
   submitLabel: string
   // Resolves on success; rejects (typically ApiError) on failure so we can show the message.
   onSubmit: (username: string, password: string) => Promise<void>
@@ -11,7 +10,7 @@ interface AuthFormProps {
 }
 
 // Shared username/password form for both login and register.
-export function AuthForm({ title, submitLabel, onSubmit, passwordAutoComplete, footer }: AuthFormProps) {
+export function AuthForm({ submitLabel, onSubmit, passwordAutoComplete, footer }: AuthFormProps) {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -31,46 +30,46 @@ export function AuthForm({ title, submitLabel, onSubmit, passwordAutoComplete, f
   }
 
   return (
-    <div className="screen-center">
-      <form className="card auth-form" onSubmit={submit}>
-        <h1>{title}</h1>
+    <div>
+      <div className="auth-shell">
+        <form className="card auth-form" onSubmit={submit}>
+          <label>
+            Username
+            <input
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              autoComplete="username"
+              data-testid="auth-username"
+              autoFocus
+              required
+            />
+          </label>
 
-        <label>
-          Username
-          <input
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            autoComplete="username"
-            data-testid="auth-username"
-            autoFocus
-            required
-          />
-        </label>
+          <label>
+            Password
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              autoComplete={passwordAutoComplete}
+              data-testid="auth-password"
+              required
+            />
+          </label>
 
-        <label>
-          Password
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            autoComplete={passwordAutoComplete}
-            data-testid="auth-password"
-            required
-          />
-        </label>
+          {error && (
+            <p className="error" role="alert">
+              {error}
+            </p>
+          )}
 
-        {error && (
-          <p className="error" role="alert">
-            {error}
-          </p>
-        )}
+          <button type="submit" data-testid="auth-submit" disabled={busy}>
+            {busy ? 'Please wait…' : submitLabel}
+          </button>
 
-        <button type="submit" data-testid="auth-submit" disabled={busy}>
-          {busy ? 'Please wait…' : submitLabel}
-        </button>
-
-        <p className="auth-footer">{footer}</p>
-      </form>
+          <p className="auth-footer">{footer}</p>
+        </form>
+      </div>
     </div>
   )
 }

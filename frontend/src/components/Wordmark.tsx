@@ -3,5 +3,5 @@ interface WordmarkProps {
 }
 
 export function Wordmark({ size = 'nav' }: WordmarkProps) {
-  return <span className={`wordmark wordmark-${size}`}>Todoer</span>
+  return <div className={`wordmark wordmark-${size}`}>Todoer</div>
 }
