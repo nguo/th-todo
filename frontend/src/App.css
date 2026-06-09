@@ -299,6 +299,34 @@ a {
   transition: width 0.2s ease;
 }
 
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.toolbar-toggle,
+.toolbar-action {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 13px;
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+
+.toolbar-toggle:hover,
+.toolbar-action:hover {
+  background: var(--accent-bg);
+}
+
+.toolbar-toggle[aria-pressed='true'] {
+  color: var(--accent);
+  border-color: var(--accent-border);
+}
+
 @media (max-width: 480px) {
   .card {
     padding: 18px;

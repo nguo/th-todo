@@ -11,6 +11,7 @@ export function TodoPage() {
   const [items, setItems] = useState<TodoItem[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [hideCompleted, setHideCompleted] = useState(false)
 
   useEffect(() => {
     let active = true
@@ -63,6 +64,23 @@ export function TodoPage() {
     [listId],
   )
 
+  const uncheckAll = useCallback(async () => {
+    if (!listId) return
+    const targets = items.filter((i) => i.isCompleted)
+    if (targets.length === 0) return
+    try {
+      const updated = await Promise.all(
+        targets.map((it) =>
+          api.put<TodoItem>(`/lists/${listId}/todos/${it.id}`, { isCompleted: false }),
+        ),
+      )
+      const byId = new Map(updated.map((u) => [u.id, u]))
+      setItems((prev) => prev.map((it) => byId.get(it.id) ?? it))
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not update tasks.')
+    }
+  }, [listId, items])
+
   const deleteTodo = useCallback(
     async (id: string) => {
       if (!listId) return
@@ -80,6 +98,7 @@ export function TodoPage() {
   const completed = items.length - remaining
   // Guarded by the items.length > 0 branch below, so no divide-by-zero.
   const percent = items.length === 0 ? 0 : Math.floor((completed / items.length) * 100)
+  const visibleItems = hideCompleted ? items.filter((i) => !i.isCompleted) : items
 
   return (
     <div className="app">
@@ -120,8 +139,29 @@ export function TodoPage() {
                   <div className="progress-fill" style={{ width: `${percent}%` }} />
                 </div>
               </div>
+              <div className="toolbar">
+                <button
+                  type="button"
+                  className="toolbar-toggle"
+                  aria-pressed={hideCompleted}
+                  data-testid="toggle-hide-completed"
+                  onClick={() => setHideCompleted((v) => !v)}
+                >
+                  {hideCompleted ? 'Show completed' : 'Hide completed'}
+                </button>
+                {completed > 0 && (
+                  <button
+                    type="button"
+                    className="toolbar-action"
+                    data-testid="uncheck-all"
+                    onClick={uncheckAll}
+                  >
+                    Uncheck all
+                  </button>
+                )}
+              </div>
               <ul className="todo-list">
-                {items.map((item) => (
+                {visibleItems.map((item) => (
                   <TodoItemRow
                     key={item.id}
                     item={item}
