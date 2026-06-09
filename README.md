@@ -110,12 +110,14 @@ npm run test
 
 - Build the SPA frontend with `npm run build` (outputs static files to `frontend/dist/`); serve
   those from any static host/CDN or behind the same proxy.
-- Configure the reverse proxy to forward `/api/*` to the API with the path preserved
+- Configure the reverse proxy to forward `/api/*` to the API with the path preserved.
   (keep the `/api` prefix on the .NET routes) so dev and prod behave identically.
 - Supply `Jwt__Key` (and any non-default `Jwt__Issuer`/`Jwt__Audience`) from a secret
   manager / env vars.
 - Supply `ConnectionStrings__Default` for Database connection strings.
-- Update `"AllowedHosts": "*"` in `appsettings.json` to use final hostname
+- Update `"AllowedHosts": "*"` in `appsettings.json` to use final hostname.
+- Set stricter content security policy on prod proxy.
+
 
 # 📝 Design
 ## Design Choices
