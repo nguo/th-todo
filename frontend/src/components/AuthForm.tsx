@@ -40,49 +40,45 @@ export function AuthForm({ submitLabel, onSubmit, passwordAutoComplete, footer }
   }
 
   return (
-    <div>
-      <div className="auth-shell">
-        <form className="card auth-form" onSubmit={submit}>
-          <label>
-            Username
-            <input
-              minLength={3}
-              maxLength={30}
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              autoComplete="username"
-              data-testid="auth-username"
-              autoFocus
-              required
-            />
-          </label>
+    <form className="card auth-form" onSubmit={submit}>
+      <label>
+        Username
+        <input
+          minLength={3}
+          maxLength={30}
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          autoComplete="username"
+          data-testid="auth-username"
+          autoFocus
+          required
+        />
+      </label>
 
-          <label>
-            Password
-            <input
-              minLength={8}
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              autoComplete={passwordAutoComplete}
-              data-testid="auth-password"
-              required
-            />
-          </label>
+      <label>
+        Password
+        <input
+          minLength={8}
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          autoComplete={passwordAutoComplete}
+          data-testid="auth-password"
+          required
+        />
+      </label>
 
-          {error && (
-            <p className="error" role="alert">
-              {error}
-            </p>
-          )}
+      {error && (
+        <p className="error" role="alert">
+          {error}
+        </p>
+      )}
 
-          <button type="submit" data-testid="auth-submit" disabled={busy}>
-            {busy ? 'Please wait…' : submitLabel}
-          </button>
+      <button type="submit" data-testid="auth-submit" disabled={busy}>
+        {busy ? 'Please wait…' : submitLabel}
+      </button>
 
-          <p className="auth-footer">{footer}</p>
-        </form>
-      </div>
-    </div>
+      <p className="auth-footer">{footer}</p>
+    </form>
   )
 }

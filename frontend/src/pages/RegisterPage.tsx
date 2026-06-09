@@ -1,12 +1,9 @@
-import { Link, Navigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { AuthForm } from '../components/AuthForm'
 import { useAuth } from '../auth/auth-context'
 
 export function RegisterPage() {
-  const { token, register } = useAuth()
-
-  // Already signed in → skip the form.
-  if (token) return <Navigate to="/" replace />
+  const { register } = useAuth()
 
   return (
     <AuthForm

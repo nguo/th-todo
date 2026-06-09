@@ -2,17 +2,21 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { AuthProvider } from './auth/AuthProvider'
 import { ProtectedRoute } from './auth/ProtectedRoute'
 import { AppLayout } from './layout/AppLayout'
+import { GuestLayout } from './layout/GuestLayout'
+import { LoginPage } from './pages/LoginPage'
+import { RegisterPage } from './pages/RegisterPage'
 import { TodoPage } from './pages/TodoPage'
 import './App.css'
-import { GuestLayout } from './layout/GuestLayout'
 
 export default function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/login" element={<GuestLayout type="login" />} />
-          <Route path="/register" element={<GuestLayout type="register" />} />
+          <Route element={<GuestLayout />}>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+          </Route>
           <Route
             path="/"
             element={

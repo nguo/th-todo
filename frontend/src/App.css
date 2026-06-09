@@ -98,13 +98,7 @@ button[type='submit']:not(:disabled):hover {
   color: var(--accent);
   margin-bottom: 20px;
   font-size: 14px;
-}
-
-.auth-shell {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 24px;
+  text-align: center;
 }
 
 .auth-form {
@@ -113,11 +107,6 @@ button[type='submit']:not(:disabled):hover {
   display: flex;
   flex-direction: column;
   gap: 16px;
-}
-
-.auth-form h1 {
-  margin: 0;
-  font-size: 32px;
 }
 
 .auth-form label {
@@ -147,6 +136,7 @@ a {
   letter-spacing: -0.04em;
   color: var(--accent);
   line-height: 1;
+  margin: 0;
   user-select: none;
 }
 

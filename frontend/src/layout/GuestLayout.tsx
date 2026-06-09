@@ -1,25 +1,18 @@
- import { Wordmark } from '../components/Wordmark'
-import { LoginPage } from '../pages/LoginPage'
-import { RegisterPage } from '../pages/RegisterPage'
+import { Navigate, Outlet } from 'react-router-dom'
+import { Wordmark } from '../components/Wordmark'
+import { useAuth } from '../auth/auth-context'
 
-interface GuestLayoutProps {
-  type: 'login' | 'register'
-}
+export function GuestLayout() {
+  const { token } = useAuth()
+  
+  // Already signed in → skip the form.
+    if (token) return <Navigate to="/" replace />
 
-export function GuestLayout({ type }: GuestLayoutProps) {
   return (
     <div className="screen-center guest-layout">
-      <div className="title-group">
-        <Wordmark size="hero" />
-        <div className="lead">
-          Turn plans into progress
-        </div>
-      </div>
-      { type === 'login' ? (
-        <LoginPage />
-      ) : (
-        <RegisterPage />
-      )}
+      <Wordmark size="hero" as="h1" />
+      <div className="lead">Turn plans into progress</div>
+      <Outlet />
     </div>
   )
 }

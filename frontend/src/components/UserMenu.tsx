@@ -40,7 +40,7 @@ export function UserMenu({ username, onLogout }: UserMenuProps) {
       {open && (
         <div className="user-menu" role="menu">
           <button type="button" className="link-button" role="menuitem" onClick={onLogout}>
-            Log Out
+            Log out
           </button>
         </div>
       )}
