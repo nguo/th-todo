@@ -148,7 +148,6 @@ independent of copy or element type / structure.
 - Enforce HTTPS.
 - Hook up email so users can go through password recovery flows. Dovetails into change password flow.
 - Error monitoring / observability / alerting. Traceid already set up for OpenTelemetry.
-- Add JWT refresh flow - currently they expire in 60min and the user gets logged out.
 
 ## Future Work
 ### Features
@@ -160,6 +159,7 @@ independent of copy or element type / structure.
 - Analytics
 
 ### Platform
+- Add JWT refresh flow and token-revoking capabilities.
 - Add rate limiting, especially for auth routes.
 - Add more read replicas to scale the database. The pairs well with the read-heavy app. If more primaries are needed, 
 we can partition by user for faster queries, but would introduce potential imbalanced shards based on user usage.
