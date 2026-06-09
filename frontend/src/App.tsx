@@ -27,7 +27,7 @@ export default function App() {
           >
             <Route index element={<TodoPage />} />
           </Route>
-          {/* Unknown paths fall back to the app root. */}
+          {/* Unknown paths fall back to the app root */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>

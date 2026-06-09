@@ -5,7 +5,7 @@ import { useAuth } from '../auth/auth-context'
 export function GuestLayout() {
   const { token } = useAuth()
   
-  // Already signed in → skip the form.
+  // Already signed in → skip the form
     if (token) return <Navigate to="/" replace />
 
   return (

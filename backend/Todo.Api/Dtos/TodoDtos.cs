@@ -16,7 +16,7 @@ public record TodoItemDto(
 public record CreateTodoRequest(
     [Required, StringLength(500, MinimumLength = 1)] string Title);
 
-// Both fields optional: send Title to rename, IsCompleted to (un)complete, or both.
+// Both optional: Title to rename, IsCompleted to (un)complete, or both
 public record UpdateTodoRequest(
     [StringLength(500, MinimumLength = 1)] string? Title,
     bool? IsCompleted);

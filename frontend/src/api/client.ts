@@ -1,8 +1,8 @@
 // Typed fetch wrapper.
 //
-// All requests use a relative `/api` base (Vite proxies it in dev, the reverse proxy in
-// prod → same-origin, no CORS). A JWT, when present, is attached as a Bearer token; a 401
-// clears it and invokes the registered unauthorized handler so the app can return to login.
+// Relative `/api` base (Vite proxies in dev, the reverse proxy in prod → same-origin, no CORS).
+// A JWT, if present, is sent as a Bearer token; a 401 clears it and fires the unauthorized
+// handler so the app returns to login.
 const API_BASE = '/api'
 const TOKEN_KEY = 'todo_token'
 
@@ -20,8 +20,8 @@ export class ApiError extends Error {
   }
 }
 
-// Called when any request comes back 401 (token missing/expired). The auth layer registers a
-// handler here; kept as a callback so this module stays decoupled from the React/auth code.
+// Called on any 401 (token missing/expired). Auth layer registers a handler here; a callback
+// keeps this module decoupled from the React/auth code.
 let onUnauthorized: () => void = () => {}
 export const setUnauthorizedHandler = (handler: () => void) => {
   onUnauthorized = handler
@@ -45,7 +45,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   }
 
   if (!res.ok) {
-    // The API returns `{ error }` for handled failures; fall back to the status text.
+    // API returns `{ error }` for handled failures; fall back to status text.
     let message = `${res.status} ${res.statusText}`
     try {
       const body = await res.json()
@@ -56,7 +56,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     throw new ApiError(res.status, message)
   }
 
-  // 204 No Content has no body to parse.
+  // 204 has no body to parse.
   return res.status === 204 ? (undefined as T) : ((await res.json()) as T)
 }
 

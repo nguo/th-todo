@@ -3,10 +3,8 @@ import react from '@vitejs/plugin-react'
 
 // https://vite.dev/config/
 //
-// In dev, the browser only ever talks to the Vite dev server (default :5173).
-// Requests to /api/* are proxied to the .NET API (:5080). This mirrors the
-// production reverse proxy (HAProxy/ingress) so the app always calls a relative
-// /api path and never deals with CORS.
+// In dev the browser only talks to the Vite dev server (:5173); /api/* is proxied to the API
+// (:5080). Mirrors the prod reverse proxy so the app always calls a relative /api path, no CORS.
 
 export default defineConfig({
   plugins: [react()],

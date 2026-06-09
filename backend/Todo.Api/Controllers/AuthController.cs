@@ -28,11 +28,11 @@ public class AuthController(
         {
             Username = req.Username.Trim(),
             NormalizedUsername = normalized,
-            PasswordHash = "", // replaced immediately below
+            PasswordHash = "", // Replaced below
         };
         user.PasswordHash = hasher.HashPassword(user, req.Password);
 
-        // New users get a default list. Created in the same SaveChanges => one transaction.
+        // Default list for new users; same SaveChanges = one transaction
         var defaultList = new TodoList { UserId = user.Id, Name = "My Tasks" };
 
         db.Users.Add(user);
@@ -49,7 +49,7 @@ public class AuthController(
         var normalized = req.Username.Trim().ToLowerInvariant();
         var user = await db.Users.FirstOrDefaultAsync(u => u.NormalizedUsername == normalized);
 
-        // Generic message either way so we don't reveal whether the username exists.
+        // Generic message either way — don't reveal whether the username exists
         if (user is null ||
             hasher.VerifyHashedPassword(user, user.PasswordHash, req.Password)
                 == PasswordVerificationResult.Failed)
@@ -60,7 +60,7 @@ public class AuthController(
         return Ok(new AuthResponse(tokens.CreateToken(user), user.Username));
     }
 
-    // Lets the SPA validate a stored token on load and recover the username.
+    // Lets the SPA validate a stored token on load and recover the username
     [Authorize]
     [HttpGet("me")]
     public IActionResult Me() => Ok(new { username = User.FindFirstValue(ClaimTypes.Name) });

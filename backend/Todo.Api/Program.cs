@@ -14,12 +14,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 // --- Services (DI container) ---
 
-// EF Core + SQLite. The connection string lives in appsettings.json. Mapping is provider
-// agnostic, so swapping to Postgres later is a package + connection-string change.
+// EF Core + SQLite (conn string in appsettings). Provider-agnostic mapping — Postgres
+// = package + conn-string swap
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("Default")));
 
-// Auth: bind JWT settings, hash passwords with the built-in PBKDF2 hasher, issue tokens.
+// Auth: JWT settings, built-in PBKDF2 hasher, token service
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));
 builder.Services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddSingleton<TokenService>();
@@ -28,7 +28,7 @@ var jwt = builder.Configuration.GetSection("Jwt").Get<JwtOptions>()
           ?? throw new InvalidOperationException("Missing 'Jwt' configuration section.");
 if (string.IsNullOrWhiteSpace(jwt.Key))
 {
-    // Dev: `dotnet user-secrets set "Jwt:Key" <value>`. Prod: Jwt__Key env var / secret manager.
+    // Dev: `dotnet user-secrets set "Jwt:Key" <value>`. Prod: Jwt__Key env var / secret manager
     throw new InvalidOperationException(
         "Jwt:Key is not configured. Set it via user-secrets (dev) or the Jwt__Key env var (prod).");
 }
@@ -52,26 +52,25 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddControllers();
 
-// HTTP request/response logging. Safe default: properties + headers + timing, NO bodies
-// (header values are redacted unless allow-listed, so Authorization/Cookie never leak).
+// HTTP logging. Safe default: properties + headers + timing, no bodies (headers redacted
+// unless allow-listed, so Authorization/Cookie never leak)
 builder.Services.AddHttpLogging(o =>
 {
     o.LoggingFields = HttpLoggingFields.RequestPropertiesAndHeaders
                     | HttpLoggingFields.ResponsePropertiesAndHeaders
                     | HttpLoggingFields.Duration;
-    o.CombineLogs = true; // one log entry per request instead of several
+    o.CombineLogs = true; // One entry per request, not several
 });
-// Defense-in-depth: strips /api/auth/* bodies even if body logging is enabled, and adds
-// user/traceId correlators.
+// Defense-in-depth: strips /api/auth/* bodies even if body logging is on; adds user/traceId
 builder.Services.AddHttpLoggingInterceptor<AuthBodyLoggingInterceptor>();
 
-// Emits the OpenAPI JSON doc (no UI). Handy later for generating a typed TS client.
+// OpenAPI JSON doc, no UI. Handy later for a typed TS client
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-// Apply EF Core migrations on startup so the schema is created/upgraded automatically.
-// (At horizontal scale this moves to a gated deploy step to avoid N instances racing.)
+// Apply EF migrations on startup (create/upgrade schema). At scale this moves to a gated
+// deploy step so instances don't race
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -80,14 +79,14 @@ using (var scope = app.Services.CreateScope())
 
 // --- Middleware pipeline ---
 
-// The API runs behind a reverse proxy (Vite in dev, HAProxy/ingress in prod).
-// Honor X-Forwarded-* so the app sees the original scheme/host.
+// Behind a reverse proxy (Vite dev, HAProxy/ingress prod). Honor X-Forwarded-* so the app
+// sees the original scheme/host
 app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
 });
 
-// After forwarded headers so logged scheme/host reflect the proxy's values.
+// After forwarded headers so logged scheme/host reflect the proxy
 app.UseHttpLogging();
 
 if (app.Environment.IsDevelopment())
@@ -95,8 +94,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-// No CORS: the browser only ever sees one origin (the proxy fans out by path),
-// so cross-origin rules never come into play.
+// No CORS: browser sees one origin (proxy fans out by path), so cross-origin never applies
 
 app.UseAuthentication();
 app.UseAuthorization();
@@ -105,6 +103,5 @@ app.MapControllers();
 
 app.Run();
 
-// Exposes the implicit Program type to the test project for WebApplicationFactory<Program>.
-// No runtime effect.
+// Exposes the implicit Program type for WebApplicationFactory<Program> in tests. No runtime effect
 public partial class Program { }

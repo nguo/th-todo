@@ -5,11 +5,10 @@ import { AuthContext, type AuthContextValue } from './auth-context'
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(() => tokenStore.get())
   const [username, setUsername] = useState<string | null>(null)
-  // Only "initializing" if there's a stored token to validate; otherwise nothing to wait for.
+  // Only initializing if a stored token needs validating; else nothing to wait for.
   const [initializing, setInitializing] = useState(() => tokenStore.get() !== null)
 
-  // Whenever a request reports the session is no longer valid, drop the auth state so the
-  // router sends the user back to login.
+  // On an invalid-session report, drop auth state so the router sends the user to login.
   useEffect(() => {
     setUnauthorizedHandler(() => {
       setToken(null)
@@ -17,8 +16,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     })
   }, [])
 
-  // On first load, if a token is stored, confirm it's still valid and recover the username.
-  // (When there's no token, `initializing` already starts false — nothing to do.)
+  // On first load, validate any stored token and recover the username (no token →
+  // `initializing` already false, nothing to do).
   useEffect(() => {
     let active = true
     if (!tokenStore.get()) return
@@ -28,7 +27,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (active) setUsername(r.username)
       })
       .catch(() => {
-        /* a 401 already cleared the token via the unauthorized handler */
+        /* 401 already cleared the token via the unauthorized handler */
       })
       .finally(() => {
         if (active) setInitializing(false)

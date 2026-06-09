@@ -4,9 +4,8 @@ using Microsoft.AspNetCore.HttpLogging;
 
 namespace Todo.Api.Logging;
 
-// Defense-in-depth: even if request/response body logging is enabled globally, never let
-// /api/auth/* bodies (passwords on the way in, tokens on the way out) reach the logs.
-// Also enriches each entry with user + trace correlators.
+// Defense-in-depth: keep /api/auth/* bodies (passwords in, tokens out) out of logs even if
+// body logging is on globally. Also adds user + trace correlators
 public sealed class AuthBodyLoggingInterceptor : IHttpLoggingInterceptor
 {
     public ValueTask OnRequestAsync(HttpLoggingInterceptorContext ctx)
@@ -16,7 +15,7 @@ public sealed class AuthBodyLoggingInterceptor : IHttpLoggingInterceptor
         return ValueTask.CompletedTask;
     }
 
-    // Runs after auth + the endpoint, so HttpContext.User and the request Activity are populated.
+    // Runs after auth + endpoint, so HttpContext.User and the request Activity are populated
     public ValueTask OnResponseAsync(HttpLoggingInterceptorContext ctx)
     {
         var uid = ctx.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;

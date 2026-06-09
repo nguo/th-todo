@@ -4,7 +4,7 @@ import { AddTodo } from '../components/AddTodo'
 import { TodoItemRow } from '../components/TodoItemRow'
 
 export function TodoPage() {
-  // MVP: every user has one default list. We resolve its id once and scope all calls to it.
+  // MVP: one default list per user; resolve its id once and scope all calls to it.
   const [listId, setListId] = useState<string | null>(null)
   const [items, setItems] = useState<TodoItem[]>([])
   const [loading, setLoading] = useState(true)
@@ -39,7 +39,7 @@ export function TodoPage() {
     }
   }, [])
 
-  // Throws on failure so AddTodo can keep the typed text and show the error.
+  // Throws on failure so AddTodo keeps the typed text and shows the error.
   const addTodo = useCallback(
     async (title: string) => {
       if (!listId) return
@@ -94,7 +94,7 @@ export function TodoPage() {
 
   const remaining = items.filter((i) => !i.isCompleted).length
   const completed = items.length - remaining
-  // Guarded by the items.length > 0 branch below, so no divide-by-zero.
+  // Guarded by the items.length > 0 branch below — no divide-by-zero.
   const percent = items.length === 0 ? 0 : Math.floor((completed / items.length) * 100)
   const visibleItems = hideCompleted ? items.filter((i) => !i.isCompleted) : items
 

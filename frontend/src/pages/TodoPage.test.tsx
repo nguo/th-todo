@@ -31,7 +31,7 @@ beforeEach(() => {
 })
 afterEach(() => tokenStore.clear())
 
-// Render TodoPage (real AuthProvider, seeded token) with a todos response + any mutation handlers.
+// Render TodoPage (real AuthProvider, seeded token) with a todos response + any mutation handlers
 function renderWithTodos(items: TodoItem[], ...handlers: HttpHandler[]) {
   server.use(http.get(todosUrl, () => HttpResponse.json(items)), ...handlers)
   render(

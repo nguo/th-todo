@@ -11,7 +11,7 @@ namespace Todo.Api.Controllers;
 [Route("api/lists")]
 public class ListsController(AppDbContext db) : AuthorizedControllerBase
 {
-    // The user's lists (MVP UI uses the default/first). Create/rename/delete are future work.
+    // User's lists (MVP UI uses the first). Create/rename/delete = future
     [HttpGet]
     public async Task<IActionResult> Get()
     {

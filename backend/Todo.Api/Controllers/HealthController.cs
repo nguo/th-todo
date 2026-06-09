@@ -3,7 +3,7 @@ using Todo.Api.Data;
 
 namespace Todo.Api.Controllers;
 
-// heath check for server
+// Health + DB connectivity check
 [ApiController]
 [Route("api/health")]
 public class HealthController(AppDbContext db) : ControllerBase

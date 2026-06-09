@@ -3,15 +3,14 @@ using Todo.Api.Models;
 
 namespace Todo.Api.Data;
 
-// The gateway to the database.
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
     public DbSet<User> Users => Set<User>();
     public DbSet<TodoList> TodoLists => Set<TodoList>();
     public DbSet<TodoItem> TodoItems => Set<TodoItem>();
 
-    // All mapping lives here (no provider-specific SQL) so the database is a drop-in swap
-    // via the connection string: SQLite in dev, Postgres/etc. in prod.
+    // All mapping here, no provider-specific SQL — DB swap = connection string (SQLite dev,
+    // Postgres prod)
     protected override void OnModelCreating(ModelBuilder b)
     {
         b.Entity<User>(e =>
@@ -19,15 +18,14 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             e.Property(u => u.Username).IsRequired().HasMaxLength(100);
             e.Property(u => u.NormalizedUsername).IsRequired().HasMaxLength(100);
             e.Property(u => u.PasswordHash).IsRequired();
-            // Case-insensitive uniqueness enforced on the normalized (lowercased) column.
+            // Case-insensitive uniqueness via the normalized (lowercased) column
             e.HasIndex(u => u.NormalizedUsername).IsUnique();
         });
 
         b.Entity<TodoList>(e =>
         {
             e.Property(l => l.Name).IsRequired().HasMaxLength(200);
-            // Relationship by FK only (no navigations). Index UserId for "lists of a user"
-            // lookups; cascade so deleting a user removes their lists.
+            // FK only, no navigations. Index UserId for lookups; cascade deletes a user's lists
             e.HasOne<User>()
                 .WithMany()
                 .HasForeignKey(l => l.UserId)
@@ -38,8 +36,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         b.Entity<TodoItem>(e =>
         {
             e.Property(i => i.Title).IsRequired().HasMaxLength(500);
-            // Index ListId for "items in a list" lookups; cascade so deleting a list (or, via
-            // the chain, a user) removes its items.
+            // Index ListId for lookups; cascade deletes a list's items (and via the chain, a user's)
             e.HasOne<TodoList>()
                 .WithMany()
                 .HasForeignKey(i => i.ListId)

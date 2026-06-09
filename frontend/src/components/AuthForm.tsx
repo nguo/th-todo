@@ -3,13 +3,13 @@ import { ApiError } from '../api/client'
 
 interface AuthFormProps {
   submitLabel: string
-  // Resolves on success; rejects (typically ApiError) on failure so we can show the message.
+  // Resolves on success; rejects (usually ApiError) on failure so we show the message.
   onSubmit: (username: string, password: string) => Promise<void>
   passwordAutoComplete: 'current-password' | 'new-password'
   footer: ReactNode
 }
 
-// Shared username/password form for both login and register.
+// Shared username/password form for login and register.
 export function AuthForm({ submitLabel, onSubmit, passwordAutoComplete, footer }: AuthFormProps) {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')

@@ -7,16 +7,16 @@ using Todo.Api.Models;
 
 namespace Todo.Api.Auth;
 
-// Issues signed JWT access tokens. Stateless: any instance can validate a token it issued (or
-// another instance issued) using only the shared signing key.
+// Issues signed JWT access tokens. Stateless: any instance validates a token with the shared
+// signing key
 public class TokenService(IOptions<JwtOptions> options)
 {
     private readonly JwtOptions _opt = options.Value;
 
     public string CreateToken(User user)
     {
-        // ClaimTypes.NameIdentifier round-trips back to the same type on validation, so
-        // controllers can read the user id via User.FindFirstValue(ClaimTypes.NameIdentifier).
+        // NameIdentifier round-trips to the same type on validation, so controllers read the
+        // user id back via User.FindFirstValue(ClaimTypes.NameIdentifier)
         var claims = new[]
         {
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),

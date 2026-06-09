@@ -2,8 +2,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Todo.Api.Dtos;
 
-// For record types, ASP.NET model validation reads attributes from the constructor parameter
-// (no [property:] target) — [ApiController] then auto-returns 400 on failure.
+// On records, model validation reads attrs from the ctor param (no [property:]) —
+// [ApiController] then auto-returns 400 on failure
 public record RegisterRequest(
     [Required, StringLength(100, MinimumLength = 3)] string Username,
     [Required, StringLength(200, MinimumLength = 8)] string Password);

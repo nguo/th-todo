@@ -11,9 +11,9 @@ interface TodoItemRowProps {
 export function TodoItemRow({ item, onToggle, onRename, onDelete }: TodoItemRowProps) {
   const [editing, setEditing] = useState(false)
   const [draft, setDraft] = useState(item.title)
-  // An edit session finishes once. Leaving edit mode unmounts the input, which fires a blur on
-  // top of an Enter/Save commit; this guard stops that trailing blur from also running cancel().
-  // Reset only when a new edit starts.
+  // An edit session finishes once. Leaving edit mode unmounts the input, firing a blur on top of
+  // an Enter/Save commit; this guard stops that trailing blur from also running cancel(). Reset
+  // only when a new edit starts.
   const finishing = useRef(false)
 
   const startEdit = () => {
@@ -43,8 +43,8 @@ export function TodoItemRow({ item, onToggle, onRename, onDelete }: TodoItemRowP
   }
 
   const onKeyDown = (e: KeyboardEvent) => {
-    // A textarea doesn't submit on Enter, so save here. preventDefault stops a newline being
-    // inserted — titles stay single-line, the textarea just wraps/grows visually.
+    // A textarea doesn't submit on Enter, so save here. preventDefault stops a newline — titles
+    // stay single-line, the textarea just wraps/grows visually.
     if (e.key === 'Enter') {
       e.preventDefault()
       commit()
@@ -71,15 +71,15 @@ export function TodoItemRow({ item, onToggle, onRename, onDelete }: TodoItemRowP
             data-testid="todo-edit-input"
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
-            // Blur discards the edit; saving is explicit (Enter or the Save button).
+            // Blur discards the edit; saving is explicit (Enter or Save).
             onBlur={cancel}
             onKeyDown={onKeyDown}
             aria-label="Edit task"
             autoFocus
           />
           <div className="todo-edit-actions">
-            {/* preventDefault on mousedown keeps focus on the input so its blur (= cancel)
-                doesn't fire before this click commits. */}
+            {/* preventDefault on mousedown keeps focus so the input's blur (= cancel) doesn't
+                fire before this click commits */}
             <button type="submit" data-testid="todo-save" onMouseDown={(e) => e.preventDefault()}>
               Save
             </button>

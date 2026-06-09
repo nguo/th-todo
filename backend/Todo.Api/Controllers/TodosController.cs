@@ -7,8 +7,8 @@ using Todo.Api.Models;
 
 namespace Todo.Api.Controllers;
 
-// Nested under the list so multi-list later is non-breaking. Every action first confirms the
-// list belongs to the caller (404 otherwise — don't leak existence), then scopes to that list.
+// Nested under the list so multi-list later is non-breaking. Every action confirms list
+// ownership first (404, don't leak existence), then scopes to it
 [ApiController]
 [Authorize]
 [Route("api/lists/{listId:guid}/todos")]
@@ -36,12 +36,12 @@ public class TodosController(AppDbContext db) : AuthorizedControllerBase
     {
         if (!await OwnsListAsync(listId)) return NotFound();
 
-        // [Required]+MinLength reject empty, but a whitespace-only title passes validation and
-        // would Trim() to "" — reject it explicitly.
+        // [Required]+MinLength reject empty, but whitespace-only passes validation and Trims
+        // to "" — reject explicitly
         if (string.IsNullOrWhiteSpace(req.Title))
             return BadRequest(new { error = "Title is required." });
 
-        // Append at the end of the list.
+        // Append at end
         var maxPosition = await db.TodoItems
             .Where(i => i.ListId == listId)
             .MaxAsync(i => (int?)i.Position) ?? -1;
@@ -58,7 +58,7 @@ public class TodosController(AppDbContext db) : AuthorizedControllerBase
         return StatusCode(StatusCodes.Status201Created, ToDto(item));
     }
 
-    // Edit text and/or completion. Send either field (or both); omitted fields are unchanged.
+    // Edit title and/or completion; omitted fields unchanged
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> Update(Guid listId, Guid id, UpdateTodoRequest req)
     {
@@ -67,7 +67,7 @@ public class TodosController(AppDbContext db) : AuthorizedControllerBase
         var item = await db.TodoItems.FirstOrDefaultAsync(i => i.Id == id && i.ListId == listId);
         if (item is null) return NotFound();
 
-        // A provided title can't be whitespace-only (would Trim() to "").
+        // A provided title can't be whitespace-only (Trims to "")
         if (req.Title is not null && string.IsNullOrWhiteSpace(req.Title))
             return BadRequest(new { error = "Title cannot be blank." });
 

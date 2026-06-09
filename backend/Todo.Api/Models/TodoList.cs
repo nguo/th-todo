@@ -1,8 +1,7 @@
 namespace Todo.Api.Models;
 
-// A named list of todo items belonging to a single user. Every user gets a default list
-// ("My Tasks") at registration; multi-list management is future work. The owning user is
-// referenced by the UserId FK only (no navigation property — we never traverse list -> user).
+// A user's named list of todos. Default "My Tasks" at registration; multi-list = future.
+// UserId FK only, no nav prop — we never traverse list -> user
 public class TodoList
 {
     public Guid Id { get; set; } = Guid.CreateVersion7();

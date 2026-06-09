@@ -3,7 +3,7 @@ import { createContext, useContext } from 'react'
 export interface AuthContextValue {
   token: string | null
   username: string | null
-  // True while we validate a stored token on first load (avoids a login-page flash).
+  // True while validating a stored token on first load (avoids a login-page flash).
   initializing: boolean
   login: (username: string, password: string) => Promise<void>
   register: (username: string, password: string) => Promise<void>
