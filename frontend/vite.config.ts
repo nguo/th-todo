@@ -14,7 +14,7 @@ export default defineConfig({
       'X-Frame-Options': 'DENY',
       // ws: permits the Vite HMR WebSocket in dev; prod CSP (set at the reverse proxy) omits it
       'Content-Security-Policy':
-        "default-src 'self'; connect-src 'self' ws:; frame-ancestors 'none'",
+        "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self' ws:; frame-ancestors 'none'",
     },
     proxy: {
       '/api': {
