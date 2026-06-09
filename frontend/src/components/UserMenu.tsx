@@ -32,6 +32,7 @@ export function UserMenu({ username, onLogout }: UserMenuProps) {
         className="user-menu-trigger"
         aria-haspopup="menu"
         aria-expanded={open}
+        data-testid="user-menu-trigger"
         onClick={() => setOpen((v) => !v)}
       >
         <span className="avatar" aria-hidden>{username && username[0].toUpperCase()}</span>
@@ -39,7 +40,7 @@ export function UserMenu({ username, onLogout }: UserMenuProps) {
       </button>
       {open && (
         <div className="user-menu" role="menu">
-          <button type="button" className="link-button" role="menuitem" onClick={onLogout}>
+          <button type="button" className="link-button" role="menuitem" data-testid="user-menu-logout" onClick={onLogout}>
             Log out
           </button>
         </div>
