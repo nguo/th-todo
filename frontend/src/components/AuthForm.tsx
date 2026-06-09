@@ -23,7 +23,17 @@ export function AuthForm({ submitLabel, onSubmit, passwordAutoComplete, footer }
     try {
       await onSubmit(username.trim(), password)
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : 'Something went wrong. Please try again.')
+      if (err instanceof ApiError) {
+        if (err.status === 401) {
+          setError('Invalid login credentials. Please try again.')
+        } else if (err.status === 400) {
+          setError('Please check your username or password length')
+        } else if (err.status < 500) {
+          setError(err.message)
+        }
+      } else {
+        setError('Something went wrong. Please try again.')
+      }
     } finally {
       setBusy(false)
     }
@@ -36,6 +46,8 @@ export function AuthForm({ submitLabel, onSubmit, passwordAutoComplete, footer }
           <label>
             Username
             <input
+              minLength={3}
+              maxLength={30}
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               autoComplete="username"
@@ -48,6 +60,7 @@ export function AuthForm({ submitLabel, onSubmit, passwordAutoComplete, footer }
           <label>
             Password
             <input
+              minLength={8}
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
