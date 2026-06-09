@@ -1,4 +1,4 @@
-import { useState, type FormEvent, type ReactNode } from 'react'
+import { useState, type SyntheticEvent, type ReactNode } from 'react'
 import { ApiError } from '../api/client'
 
 interface AuthFormProps {
@@ -17,7 +17,7 @@ export function AuthForm({ title, submitLabel, onSubmit, passwordAutoComplete, f
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
 
-  const submit = async (e: FormEvent) => {
+  const submit = async (e: SyntheticEvent) => {
     e.preventDefault()
     setError(null)
     setBusy(true)

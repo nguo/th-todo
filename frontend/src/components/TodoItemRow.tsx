@@ -1,4 +1,4 @@
-import { useRef, useState, type FormEvent, type KeyboardEvent } from 'react'
+import { useRef, useState, type SyntheticEvent, type KeyboardEvent } from 'react'
 import type { TodoItem } from '../api/client'
 
 interface TodoItemRowProps {
@@ -37,7 +37,7 @@ export function TodoItemRow({ item, onToggle, onRename, onDelete }: TodoItemRowP
     setEditing(false)
   }
 
-  const onSubmit = (e: FormEvent) => {
+  const onSubmit = (e: SyntheticEvent) => {
     e.preventDefault()
     commit()
   }

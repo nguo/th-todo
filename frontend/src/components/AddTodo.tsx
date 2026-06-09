@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import { useState, type SyntheticEvent } from 'react'
 import { ApiError } from '../api/client'
 
 interface AddTodoProps {
@@ -12,7 +12,7 @@ export function AddTodo({ onAdd, disabled }: AddTodoProps) {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const submit = async (e: FormEvent) => {
+  const submit = async (e: SyntheticEvent) => {
     e.preventDefault()
     const trimmed = title.trim()
     if (!trimmed) return
