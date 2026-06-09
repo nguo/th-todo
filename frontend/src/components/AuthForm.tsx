@@ -1,5 +1,5 @@
 import { useState, type SyntheticEvent, type ReactNode } from 'react'
-import { ApiError } from '../api/client'
+import { authError, type AuthError } from './authError'
 
 interface AuthFormProps {
   submitLabel: string
@@ -13,7 +13,7 @@ interface AuthFormProps {
 export function AuthForm({ submitLabel, onSubmit, passwordAutoComplete, footer }: AuthFormProps) {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError] = useState<AuthError | null>(null)
   const [busy, setBusy] = useState(false)
 
   const submit = async (e: SyntheticEvent) => {
@@ -23,17 +23,7 @@ export function AuthForm({ submitLabel, onSubmit, passwordAutoComplete, footer }
     try {
       await onSubmit(username.trim(), password)
     } catch (err) {
-      if (err instanceof ApiError) {
-        if (err.status === 401) {
-          setError('Invalid login credentials. Please try again.')
-        } else if (err.status === 400) {
-          setError('Please check your username or password length')
-        } else if (err.status < 500) {
-          setError(err.message)
-        }
-      } else {
-        setError('Something went wrong. Please try again.')
-      }
+      setError(authError(err))
     } finally {
       setBusy(false)
     }
@@ -70,7 +60,7 @@ export function AuthForm({ submitLabel, onSubmit, passwordAutoComplete, footer }
 
       {error && (
         <p className="error" role="alert">
-          {error}
+          {error.message}
         </p>
       )}
 

@@ -29,15 +29,11 @@ beforeEach(() => {
 })
 
 describe('LoginPage', () => {
-  it('stores the returned token on successful login', async () => {
+  // Wiring check: form submit → auth context login → API → token persisted.
+  // Form behavior and error-message mapping live in AuthForm.test.tsx.
+  it('persists the returned token on successful login', async () => {
     server.use(http.post('/api/auth/login', () => HttpResponse.json({ token: 'tok-123', username: 'alice' })))
     await submitLogin('alice', 'password123')
     await waitFor(() => expect(tokenStore.get()).toBe('tok-123'))
-  })
-
-  it('shows an error alert when login fails', async () => {
-    server.use(http.post('/api/auth/login', () => HttpResponse.json({ error: 'nope' }, { status: 401 })))
-    await submitLogin('alice', 'foo')
-    expect(await screen.findByRole('alert')).toBeInTheDocument()
   })
 })
