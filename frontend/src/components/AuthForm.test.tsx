@@ -22,7 +22,7 @@ describe('authError', () => {
   })
 
   it('surfaces nothing for server errors', () => {
-    expect(authError(new ApiError(500, 'boom'))).toBeNull()
+    expect(authError(new ApiError(500, 'boom'))?.kind).toBe('generic')
   })
 
   it('maps non-API errors to generic', () => {
