@@ -106,6 +106,42 @@ describe('TodoPage', () => {
     expect(screen.queryAllByTestId('todo-checkbox')).toHaveLength(0)
   })
 
+  it('hides and re-shows completed items when toggled', async () => {
+    const user = userEvent.setup()
+    renderWithTodos([
+      todo({ id: 't1', title: 'done', isCompleted: true }),
+      todo({ id: 't2', title: 'pending' }),
+    ])
+    expect(await screen.findByText('done')).toBeInTheDocument()
+
+    await user.click(screen.getByTestId('toggle-hide-completed'))
+    expect(screen.queryByText('done')).toBeNull()
+    expect(screen.getByText('pending')).toBeInTheDocument()
+
+    await user.click(screen.getByTestId('toggle-hide-completed'))
+    expect(screen.getByText('done')).toBeInTheDocument()
+  })
+
+  it('uncheck all clears every completed item', async () => {
+    const user = userEvent.setup()
+    renderWithTodos(
+      [
+        todo({ id: 't1', title: 'one', isCompleted: true }),
+        todo({ id: 't2', title: 'two', isCompleted: true }),
+      ],
+      // Match any id so the fan-out of PUTs resolves without relying on call order.
+      http.put(`${todosUrl}/:id`, ({ params }) =>
+        HttpResponse.json(todo({ id: params.id as string, isCompleted: false })),
+      ),
+    )
+    await waitFor(() => expect(screen.getByText('100%')).toBeInTheDocument())
+
+    await user.click(screen.getByTestId('uncheck-all'))
+
+    await waitFor(() => expect(screen.getByText('0%')).toBeInTheDocument())
+    expect(screen.queryByTestId('uncheck-all')).toBeNull()
+  })
+
   it('shows an error when the list fails to load', async () => {
     renderWithTodos([], http.get('/api/lists', () => new HttpResponse(null, { status: 500 })))
     expect(await screen.findByRole('alert')).toBeInTheDocument()
