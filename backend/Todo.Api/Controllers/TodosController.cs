@@ -36,6 +36,11 @@ public class TodosController(AppDbContext db) : AuthorizedControllerBase
     {
         if (!await OwnsListAsync(listId)) return NotFound();
 
+        // [Required]+MinLength reject empty, but a whitespace-only title passes validation and
+        // would Trim() to "" — reject it explicitly.
+        if (string.IsNullOrWhiteSpace(req.Title))
+            return BadRequest(new { error = "Title is required." });
+
         // Append at the end of the list.
         var maxPosition = await db.TodoItems
             .Where(i => i.ListId == listId)
@@ -61,6 +66,10 @@ public class TodosController(AppDbContext db) : AuthorizedControllerBase
 
         var item = await db.TodoItems.FirstOrDefaultAsync(i => i.Id == id && i.ListId == listId);
         if (item is null) return NotFound();
+
+        // A provided title can't be whitespace-only (would Trim() to "").
+        if (req.Title is not null && string.IsNullOrWhiteSpace(req.Title))
+            return BadRequest(new { error = "Title cannot be blank." });
 
         if (req.Title is not null) item.Title = req.Title.Trim();
         if (req.IsCompleted is not null) item.IsCompleted = req.IsCompleted.Value;

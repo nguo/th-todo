@@ -61,4 +61,66 @@ public class TodoCrudTests(CustomWebApplicationFactory factory) : IClassFixture<
         // Gone now → deleting again is a 404.
         Assert.Equal(HttpStatusCode.NotFound, (await client.DeleteAsync($"/api/lists/{listId}/todos/{item.Id}")).StatusCode);
     }
+
+    [Theory]
+    [InlineData("")] // empty → [Required]
+    [InlineData("   ")] // whitespace-only → controller guard
+    public async Task Create_rejects_empty_or_blank_title(string title)
+    {
+        var (client, listId) = await SetupAsync();
+        var res = await client.PostAsJsonAsync($"/api/lists/{listId}/todos", new { title });
+        Assert.Equal(HttpStatusCode.BadRequest, res.StatusCode);
+    }
+
+    [Fact]
+    public async Task Create_rejects_too_long_title()
+    {
+        var (client, listId) = await SetupAsync();
+        var res = await client.PostAsJsonAsync($"/api/lists/{listId}/todos", new { title = new string('a', 501) });
+        Assert.Equal(HttpStatusCode.BadRequest, res.StatusCode);
+    }
+
+    [Fact]
+    public async Task Create_trims_surrounding_whitespace()
+    {
+        var (client, listId) = await SetupAsync();
+        var item = await CreateAsync(client, listId, "  buy milk  ");
+        Assert.Equal("buy milk", item.Title);
+    }
+
+    [Fact]
+    public async Task Update_changes_only_the_fields_provided()
+    {
+        var (client, listId) = await SetupAsync();
+        var item = await CreateAsync(client, listId, "x");
+
+        // Send only isCompleted → title stays "x".
+        var toggled = (await (await client.PutAsJsonAsync(
+            $"/api/lists/{listId}/todos/{item.Id}", new { isCompleted = true })).Content.ReadFromJsonAsync<ItemResp>())!;
+        Assert.Equal("x", toggled.Title);
+        Assert.True(toggled.IsCompleted);
+
+        // Send only title → completion stays true.
+        var renamed = (await (await client.PutAsJsonAsync(
+            $"/api/lists/{listId}/todos/{item.Id}", new { title = "y" })).Content.ReadFromJsonAsync<ItemResp>())!;
+        Assert.Equal("y", renamed.Title);
+        Assert.True(renamed.IsCompleted);
+    }
+
+    [Fact]
+    public async Task Update_blank_title_is_bad_request()
+    {
+        var (client, listId) = await SetupAsync();
+        var item = await CreateAsync(client, listId, "x");
+        var res = await client.PutAsJsonAsync($"/api/lists/{listId}/todos/{item.Id}", new { title = "   " });
+        Assert.Equal(HttpStatusCode.BadRequest, res.StatusCode);
+    }
+
+    [Fact]
+    public async Task Update_nonexistent_item_in_own_list_is_not_found()
+    {
+        var (client, listId) = await SetupAsync();
+        var res = await client.PutAsJsonAsync($"/api/lists/{listId}/todos/{Guid.NewGuid()}", new { title = "z" });
+        Assert.Equal(HttpStatusCode.NotFound, res.StatusCode);
+    }
 }
