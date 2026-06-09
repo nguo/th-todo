@@ -1,11 +1,13 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Todo.Api.Auth;
 using Todo.Api.Data;
+using Todo.Api.Logging;
 using Todo.Api.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -50,6 +52,19 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddControllers();
 
+// HTTP request/response logging. Safe default: properties + headers + timing, NO bodies
+// (header values are redacted unless allow-listed, so Authorization/Cookie never leak).
+builder.Services.AddHttpLogging(o =>
+{
+    o.LoggingFields = HttpLoggingFields.RequestPropertiesAndHeaders
+                    | HttpLoggingFields.ResponsePropertiesAndHeaders
+                    | HttpLoggingFields.Duration;
+    o.CombineLogs = true; // one log entry per request instead of several
+});
+// Defense-in-depth: strips /api/auth/* bodies even if body logging is enabled, and adds
+// user/traceId correlators.
+builder.Services.AddHttpLoggingInterceptor<AuthBodyLoggingInterceptor>();
+
 // Emits the OpenAPI JSON doc (no UI). Handy later for generating a typed TS client.
 builder.Services.AddOpenApi();
 
@@ -71,6 +86,9 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
 });
+
+// After forwarded headers so logged scheme/host reflect the proxy's values.
+app.UseHttpLogging();
 
 if (app.Environment.IsDevelopment())
 {
